@@ -7,15 +7,17 @@ import java.util.Scanner;
 public class Imovel extends Casa {
     private double precoCompra;
     private double valorAluguel;
-    private Jogador proprietario;
+    private Jogador dono;
     private boolean hipotecado;
+    private double valorHipoteca;
 
     public Imovel(String nome, double precoCompra, double valorAluguel) {
         super(nome);
         this.precoCompra = precoCompra;
         this.valorAluguel = valorAluguel;
-        this.proprietario = null;
+        this.dono = null;
         this.hipotecado = false;
+        this.valorHipoteca = precoCompra * 0.5;
     }
 
     public double getPrecoCompra() {
@@ -26,13 +28,8 @@ public class Imovel extends Casa {
         return valorAluguel;
     }
 
-    public Jogador getProprietario() {
-        return proprietario;
-    }
-
-    public void setProprietario(Jogador proprietario) {
-        this.proprietario = proprietario;
-    }
+    public Jogador getDono() { return dono; }
+    public void setDono(Jogador dono) { this.dono = dono; }
 
     public boolean isHipotecado() {
         return hipotecado;
@@ -42,9 +39,12 @@ public class Imovel extends Casa {
         this.hipotecado = hipotecado;
     }
 
+    public double getValorHipoteca() { return valorHipoteca; }
+    public double getValorParaQuitar() { return valorHipoteca * 1.1; }
+
     @Override
     public void acao(Jogador jogador) {
-        if (proprietario == null) {
+        if (dono == null) {
             System.out.println("Este imóvel não tem proprietário.");
             System.out.printf("Preço de compra: R$ %.2f\n", precoCompra);
             Scanner sc = new Scanner(System.in);
@@ -53,7 +53,7 @@ public class Imovel extends Casa {
             if (op.equals("1")) {
                 if (jogador.getSaldo() >= precoCompra) {
                     jogador.setSaldo(jogador.getSaldo() - precoCompra);
-                    proprietario = jogador;
+                    dono = jogador;
                     jogador.getPropriedades().add(this);
                     System.out.println("Parabéns! Você comprou '" + nome + "' por R$ " + precoCompra);
                     System.out.printf("Seu novo saldo é: R$ %.2f\n", jogador.getSaldo());
@@ -63,12 +63,12 @@ public class Imovel extends Casa {
             } else {
                 System.out.println("Você optou por não comprar o imóvel.");
             }
-        } else if (!proprietario.equals(jogador)) {
+        } else if (!dono.equals(jogador)) {
             if (!hipotecado) {
-                System.out.printf("Você deve pagar aluguel de R$ %.2f para %s.\n", valorAluguel, proprietario.getNome());
+                System.out.printf("Você deve pagar aluguel de R$ %.2f para %s.\n", valorAluguel, dono.getNome());
                 if (jogador.getSaldo() >= valorAluguel) {
                     jogador.setSaldo(jogador.getSaldo() - valorAluguel);
-                    proprietario.setSaldo(proprietario.getSaldo() + valorAluguel);
+                    dono.setSaldo(dono.getSaldo() + valorAluguel);
                 } else {
                     System.out.println("Saldo insuficiente para pagar aluguel. Você está falido!");
                     jogador.setFalido(true);

@@ -98,5 +98,56 @@ public class Jogador {
         this.saldo += valor;
     }
 
+    public void adicionarImovel(Imovel imovel) {
+        propriedades.add(imovel);
+        imovel.setDono(this);
+    }
+
+    public void removerImovel(Imovel imovel) {
+        propriedades.remove(imovel);
+        imovel.setDono(null);
+    }
+
+    public List<Imovel> getPropriedadesDisponiveisParaHipoteca() {
+        List<Imovel> disponiveis = new ArrayList<>();
+        for (Imovel imovel : propriedades) {
+            if (!imovel.isHipotecado()) {
+                disponiveis.add(imovel);
+            }
+        }
+        return disponiveis;
+    }
+
+    // Retorna propriedades que estão hipotecadas
+    public List<Imovel> getPropriedadesHipotecadas() {
+        List<Imovel> hipotecadas = new ArrayList<>();
+        for (Imovel imovel : propriedades) {
+            if (imovel.isHipotecado()) {
+                hipotecadas.add(imovel);
+            }
+        }
+        return hipotecadas;
+    }
+
+    // Hipoteca a propriedade e adiciona o valor da hipoteca ao saldo do jogador
+    public void hipotecar(Imovel imovel) {
+        if (propriedades.contains(imovel) && !imovel.isHipotecado()) {
+            imovel.setHipotecado(true);
+            this.saldo += imovel.getValorHipoteca();
+        }
+    }
+
+    // Paga a hipoteca (valor para quitar), se saldo for suficiente, e "libera" o imóvel
+    public boolean pagarHipoteca(Imovel imovel) {
+        double valor = imovel.getValorParaQuitar();
+        if (propriedades.contains(imovel) && imovel.isHipotecado() && saldo >= valor) {
+            saldo -= valor;
+            imovel.setHipotecado(false);
+            return true;
+        }
+        return false;
+    }
 
 }
+
+

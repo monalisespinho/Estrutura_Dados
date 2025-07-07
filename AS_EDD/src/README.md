@@ -55,6 +55,10 @@ O jogo inclui funcionalidades de movimentação de jogadores, compra e aluguel d
 │   │   ├── Imposto.java
 │   │   └── Restituicao.java
 │   │
+│   ├── service/
+│   │    ├── Hipoteca.java
+│   │    ├── Negociacao.java
+│   │ 
 │   ├── ranking/
 │   │   └── RankingBST.java
 │       ├── NoBST.java

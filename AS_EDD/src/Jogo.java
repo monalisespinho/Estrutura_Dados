@@ -1,5 +1,7 @@
 import Model.Imovel;
 import Model.Jogador;
+import Service.Hipoteca;
+import Service.Negociacao;
 
 import java.util.*;
 
@@ -182,6 +184,8 @@ public class Jogo {
                 System.out.println("--- O que você deseja fazer? ---");
                 System.out.println("1. Lançar Dados e Mover");
                 System.out.println("2. Ver Meu Status Completo");
+                System.out.println("3. Gerenciar Propriedades (Hipotecar / Pagar Hipoteca)");
+                System.out.println("4. Propor Negociação com Outro Jogador");
                 System.out.println("0. Desistir do Jogo");
                 System.out.print(">> Escolha uma opção: ");
                 String escolha = scanner.nextLine();
@@ -192,12 +196,20 @@ public class Jogo {
                         int dado2 = new Random().nextInt(6) + 1;
                         int total = dado1 + dado2;
                         System.out.printf("Você tirou %d e %d. Total: %d.\n", dado1, dado2, total);
-                        jogador.avancar(total);
+                        for (int i = 0; i < total; i++) jogador.avancar(total);
                         System.out.printf("Você parou em: '%s'.\n", jogador.getPosicaoAtual().getNome());
                         jogador.getPosicaoAtual().acao(jogador);
                         break;
                     case "2":
                         jogador.exibirStatusCompleto();
+                        break;
+                    case "3":
+                        Hipoteca hipoteca = new Hipoteca(jogador, scanner);
+                        hipoteca.executarMenu();
+                        break;
+                    case "4":
+                        Negociacao negociacao = new Negociacao(jogador, jogadores, scanner);
+                        negociacao.executarMenu(jogador, scanner);
                         break;
                     case "0":
                         jogador.setFalido(true);
@@ -206,7 +218,6 @@ public class Jogo {
                     default:
                         System.out.println("Opção inválida. Pulando turno.");
                 }
-
                 System.out.println("Pressione Enter para continuar...");
                 scanner.nextLine();
             }
@@ -233,4 +244,7 @@ public class Jogo {
                     j.isFalido() ? " (Falido)" : "");
         }
     }
+
+
+
 }
